@@ -1,30 +1,33 @@
-import React, { useState, useEffect, useContext } from "react";
+import React,{useState, useEffect, useContext} from "react";
 import Navbar from "../Components/Navbar";
-import banner from "../assets/oldBanner.png";
+import banner from "../assets/rentBanner.png";
 import Footer from "../Components/Footer";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase-config";
+import {collection, getDocs } from "firebase/firestore"; 
+import {db} from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Components/Modal";
 
 import { UserContext } from "../Contexts/UserContext";
 
-function Old() {
-  const currentUserrr = useContext(UserContext);
+function UPSC() {
 
-  const [oldBooks, setOldBooks] = useState([]);
-  const oldCollectionRef = collection(db, "Old");
+    const currentUserrr = useContext(UserContext);
+
+
+  const [UPSCBooks, setUPSCBooks] = useState([]);
+  const UPSCBooksCollectionRef = collection(db, "UPSC");
 
   useEffect(() => {
-    const getOldBooks = async () => {
-      const data = await getDocs(oldCollectionRef);
+    
+    const getUPSCBooks = async () => {
+      const data = await getDocs(UPSCBooksCollectionRef);
       console.log(data);
-      setOldBooks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      console.log(oldBooks);
-    };
-
-    getOldBooks();
-  }, []);
+      setUPSCBooks(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      console.log(UPSCBooks);
+    }
+  
+    getUPSCBooks();
+  }, [])
 
   const [modalOn, setModalOn] = useState(false);
 
@@ -37,7 +40,7 @@ function Old() {
 
   const [userEmail, setUserEmail] = useState("");
 
-  const clicked = (n, p, d, i, t, c, e) => {
+  const clicked = (n,p,d,i,t,c,e) => {
     setName(n);
     setPrice(p);
     setDescription(d);
@@ -47,7 +50,13 @@ function Old() {
     setUserEmail(e);
 
     setModalOn(true);
-  };
+  }
+
+
+
+
+
+
 
   return (
     <div>
@@ -55,42 +64,42 @@ function Old() {
       <img className="mx-auto mt-4 w-[90rem]" src={banner} alt="" />
       <div className="bg-gray-200 my-4">
         <h1 className="text-black text-3xl p-6 font-bold">
-          Available Old/Used Books
+          Available UPSC Books
         </h1>
         <div className="grid grid-cols-5 gap-4 px-12">
-          {oldBooks.map((oldBook, i) => {
+          {UPSCBooks.map((UPSCBook, i) => {
             return (
               <div
                 key={i}
                 className="card m-3 bg-base-100 shadow-xl transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  duration-200"
                 onClick={() =>
                   clicked(
-                    oldBook.Name,
-                    oldBook.Price,
-                    oldBook.Description,
-                    oldBook.imageUrl,
-                    oldBook.Type,
-                    oldBook.Category,
+                    UPSCBook.Name,
+                    UPSCBook.Price,
+                    UPSCBook.Description,
+                    UPSCBook.imageUrl,
+                    UPSCBook.Type,
+                    UPSCBook.Category,
                     currentUserrr?.email
                   )
                 }
               >
                 <figure className="w-full">
-                  <img className="w-full" src={oldBook.imageUrl} alt="Shoes" />
+                  <img className="w-full" src={UPSCBook.imageUrl} alt="Shoes" />
                 </figure>
                 <div className="card-body">
                   <h2 className="card-title w-[20rem]">
-                    {oldBook.Name?.substring(0, 15) + "..."}
+                    {UPSCBook.Name?.substring(0, 15) + "..."}
                     <div className="badge badge-secondary">
-                      &#8377; {oldBook.Price}
+                      &#8377; {UPSCBook.Price}
                     </div>
                   </h2>
-                  <p>{oldBook.Description?.substring(0, 25) + "..."}</p>
+                  <p>{UPSCBook.Description?.substring(0, 25) + "..."}</p>
                   <div className="card-actions justify-end">
                     <div className="badge badge-outline">
-                      {oldBook.Category}
+                      {UPSCBook.Category}
                     </div>
-                    <div className="badge badge-outline">{oldBook.Type}</div>
+                    <div className="badge badge-outline">{UPSCBook.Type}</div>
                   </div>
                 </div>
               </div>
@@ -108,9 +117,9 @@ function Old() {
               type={type}
               category={category}
               userEmail={userEmail}
-              isRent={false}
-              isNew={false}
-              isOld={true}
+              isRent={type==='Rent'?true:false}
+              isNew={type==='New'?true:false}
+              isOld={type==='Old'?true:false}
             />
           )}
         </div>
@@ -120,4 +129,5 @@ function Old() {
   );
 }
 
-export default Old;
+
+export default UPSC
